@@ -1,0 +1,19 @@
+
+td{
+  height: 75px;
+	width: 75px;
+}
+
+.trail{
+ background-color: red;
+}
+
+.start{
+ background-color: brown;
+}
+
+.dog{
+	text-align: center;
+	font-size: 45px;
+	font-weight: bold;
+}

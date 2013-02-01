@@ -1,0 +1,17 @@
+2d array map. 
+co-ordinates
+
+35 clock ticks. 
+fitness == how many trails found in clock ticks.
+
+Robot can only move forward where facing.
+Turning is a clock tick. 
+
+3 sensors - front 3 locations  01 could see 10 11 12 for example if facing that direction. 
+
+
+16 bit string smallest
+
+heading
+where i am
+F L R Nothing
