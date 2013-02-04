@@ -5,11 +5,11 @@ var Enviroment = (function(){
 	var ticks = 36;
 	
 	function Enviroment(){
-	 findDog();
+	 
 	};
 	
 	Enviroment.prototype.reset = function() { //recreate the enviroment
-		for(var i = 0; i < trailLocation.length(); i++)
+		for(var i = 0; i < trailLocation.length; i++)
 		{
 			$("."+trailLocation[i]).addClass("trail");
 		}
