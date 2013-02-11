@@ -36,6 +36,7 @@ var Nueral = (function(){
 											"outputs" : outputs,
 											"weightValues" : "",
 											"threshold" : "",
+											"connectedTo" : [],
 											"layer"		: false
 											}; //nueronObject
 			nuerons.push(nueronJSON);
