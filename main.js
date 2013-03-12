@@ -38,8 +38,8 @@ $(window).load(function()
 		nueralNetwork.addNueron(5 , 2); 
 		nueralNetwork.addNueron(5 , 2);
 		
-		nueralNetwork.addNueronToLayer(6 , 2);
-		nueralNetwork.addNueronToLayer(7 , 2);
+		nueralNetwork.addNueronToLayer(6 , 1);
+		nueralNetwork.addNueronToLayer(7 , 1);
 		
 		
 		/*** connections ***/ 
