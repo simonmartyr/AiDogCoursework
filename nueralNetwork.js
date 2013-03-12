@@ -1,8 +1,9 @@
 var Nueral = (function(){
 	var nuerons = []; //array of all nuerons 
 	var layers 	= [];
-	var outputs = [];
+	var outputs = [0, 0];
 	var inputs 	= [];
+	var bias 		= 0;
 	var hiddenLayers = 0; //number of hidden layers
 	
 	function Nueral(){
@@ -19,13 +20,18 @@ var Nueral = (function(){
 		hiddenLayers = 0; 
 	}
 	
-	Nueral.prototype.getOutputs = function() { // return output 2 01 00 etc
+	Nueral.prototype.getOutputs = function() { // return output 2 01, 00 etc
 		return outputs; 
 	};
 	
 	Nueral.prototype.run = function(inputs) { //expected 3 input array input
-		
+		beginNetwork(inputs);
 	};
+	
+	Nueral.prototype.setBias = function (value) {
+		bias = value; 
+	};
+	
 	
 	Nueral.prototype.getAll = function(){
 		console.log(nuerons);
@@ -38,10 +44,11 @@ var Nueral = (function(){
 	Nueral.prototype.addNueron = function(inputs, outputs){ //data to be processed. 
 		var nueronJSON = {"name"	 	: nuerons.length + 1,  //1 - *
 											"inputs" 	: inputs, //number of 
+											"iputAr"	: [],
 											"weights" : inputs, //number of
 											"outputs" : outputs, //number of
 											"weightValues" : "",  //value of each connection
-											"threshold" : "", //sig? 
+											"bias"		: "", //weight for bias 
 											"connectedTo" : [],  //which nueron to send data. 
 											"layer"		: false //nueron in a layer
 											}; //nueronObject
@@ -67,8 +74,8 @@ var Nueral = (function(){
 	Nueral.prototype.connectTo = function(nueronName, connections){
 		var location = findNueron(nueronName);
 		if(!isNaN(location)){
-			if(weights.length == nuerons[location]["weights"]){ // check right ammount of weights
-				nuerons[location]["weightValues"] = weights;
+			if(connections.length == nuerons[location]["outputs"]){ // check right ammount of weights
+				nuerons[location]["connectedTo"] = connections;
 			}
 			else{
 				return false; 
@@ -79,16 +86,18 @@ var Nueral = (function(){
 		}
 	};
 	
-	
-	Nueral.prototype.setThreshold = function(threshold, nueronName){ //set threshold of nueron
+	Nueral.prototype.setBiasWeight = function(nueronName, value){
 		var location = findNueron(nueronName);
-		if(location){
-			nuerons[location]["threshold"] = threshold;
+		if(!isNaN(location)){
+			nuerons[location]["bias"] = value;
+			return true;
 		}
 		else{
-			return false; 
+			return false;
 		}
-	};
+	}
+	
+	
 	
 	
 	
@@ -125,28 +134,48 @@ var Nueral = (function(){
 	/********Running private functions************/
 	
 	function beginNetwork(inputs){ // expect array
+		for(var j = 0; j < inputs; j++){
+			setNextInputs(layers[0]["nuerons"], inputs[j]); //setup first time inputs	
+		}
+		
 	  for(var i = 0; i < hiddenLayers; i++){
-			inputs = processLayers(inputs, i); //send inputs to a layer get outputs recycle 
+			processLayer(i + 1); //the cycle begins start from 1  
 		}
 	};
 	
-	function processLayer(inputs, layerName){ // results from a layer  left to right = top to bottom... yeah!
+	function processLayer(layerName){ // results from a layer  left to right = top to bottom... yeah!
 		var location = findLayer(layerName); //check exsistance
-		var outputs  = [];
-		for(var i = 0; i < layers[location]["nuerons"].length; i++)
-		{
-			var processed = processNueron(layers[location]["nuerons"][i], inputs);
-			for(var j = 0; j < processed.length; j++){
-				outputs.push(processed[j]);
+		if(!isNaN(location)){
+			for(var i = 0; i < layers[location]["nuerons"].length; i++) //process all neurons in a layer
+			{
+				processNueron(layers[location]["nuerons"][i + 1]); //start from 1
 			}
 		}
-		return outputs;
 	};
 	
-	function processNueron(nueronName, inputs){ // da serious maths man
+	function processNueron(nueronName){ // da serious maths man.. this is serious
 		var theNueron = findNueron(nueronName);
-		var outputs = [];
-		
+		var output = 0;
+		if(!isNaN(theNueron)){ //check nueron 
+		  for(var i = 0; i < nuerons[theNueron]["inputs"].length; i++){
+				output += inputs[i]  * nuerons[theNueron]["weightValues"][i]; //process connections
+			}
+			output += bias * nuerons[theNueron]["bias"];  //process bias
+			output = sigmoid(output); //sigmoid the result of connections
+			if(nuerons[theNueron]["connectedTo"].length != 0){ //if we have connections update them to have the new input
+					setNextInputs(nuerons[theNueron]["connectedTo"], output);
+			}
+			else {
+				outputs = (output > 0) ? 1 : 0;
+				outputs.push(output); //else this is the result of our nueral network,
+			}
+		}
+	};
+	
+	function setNextInputs(nueronList, input){
+		for(var i = 0; i < nuerons.length; i++){
+			nuerons[nueronList[i]]["inputs"].push(input); //update inputs from outputs. 
+		}
 	};
 
 	
@@ -164,7 +193,7 @@ var Nueral = (function(){
 	
 	function sigmoid(t) { // reference http://www.zacwitte.com/javascript-sigmoid-function
     return 1/(1+Math.pow(Math.E, -t));
-	}
+	};
 
 	
 	function findLayer(name){ // take name return index 
