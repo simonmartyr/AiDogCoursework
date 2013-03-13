@@ -21,14 +21,14 @@ $(window).load(function()
 		
 		ga.start(); //get a population
 		setupNueralNetwork(); // do once setup network 
-		population = ga.getPopulation(); //get the population
+		population = ga.getPopulation().slice(0); //get the population
 		
 		
 	});
 	
 	
 	function runIt(){
-		
+		for(var x = 0; x < 50; x++){
 			for(var i = 0; i < population.length; i++)
 			{
 				setWeights(population[i]); //set weights
@@ -40,8 +40,11 @@ $(window).load(function()
 				}
 				dogRun();
 			}
-			
-		
+			ga.fitness(fitness); // inform ga of fitnesses of soultions
+			fitness = [];
+			ga.rouletteSelection(); //roulette it new population
+			population = ga.getPopulation().slice(); //new population
+		}
 		
 	}
 	

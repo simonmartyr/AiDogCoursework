@@ -7,7 +7,7 @@ var Ga = (function(){
 	var muationFlip = 1.5; //between 1 - 100% 
 	var totalFitness = 0; //total sum of fitness
 	var maxGroupSize = 32; //max size of an person
-	var maxPopulation = 25; //max size of population
+	var maxPopulation = 26; //max size of population
 	var tournment = true; //toggle tournmentSelection
 	var iteration = 50; //number of iterations
 	
@@ -51,9 +51,11 @@ var Ga = (function(){
 
 
 	Ga.prototype.fitness = function(fitness) { //set population fitness
-		fitnesses = new array();
-		fitnesses = fitness.slice(0);
-		totalFitness();
+		fitnesses = new Array();
+		fitnesses = fitness.slice();
+		totalFit();
+		chartData();
+		
 	};
 
 	/*** private functions ***/
@@ -64,7 +66,7 @@ var Ga = (function(){
 		return theBest;
 	};
 	
-	function totalFitness() {
+	function totalFit() {
 		$.each(fitnesses, function() {
 			totalFitness = totalFitness + this; //population fitness
 		});
@@ -120,15 +122,15 @@ var Ga = (function(){
 			index = index + 2;
 			point = Math.floor((Math.random() * (maxGroupSize + 1))+ 1); //change point
 		}
-		ofspring = children; // :') I shed a tear everytime
+		ofspring = children.slice(); // :') I shed a tear everytime
 	};
 
 	function bitFlipping (flippy) { //so angry could flip tables 
 		var mutation = Math.floor((Math.random() * (100 + 1)+ 1)); // mutation chance
-		var count = flippy.length;
+		var count = flippy.length; //length of indivual
 		for(count; count > 0; count--) {
 		 if (mutation <= muationFlip){
-			 flippy[count] = (flippy[count] == 0) ? 1 : 0;
+			 flippy[count] = getRandomArbitary (-1, 1);
 		 }
 			mutation = Math.floor((Math.random() * (100 + 1)+ 1)); //flip dat coin
 		}
@@ -138,6 +140,16 @@ var Ga = (function(){
 	function getRandomArbitary (min, max) {
     return Math.random() * (max - min) + min;
 	};
+	
+	function chartData(){ //take fitnesses makes averages max etc
+	 var max, average, store = [];
+		store = fitnesses.slice();
+		store.sort();
+		max = store[store.length -1];
+		average = totalFitness / fitnesses.length;
+		fitnessMax.push(max);
+		fitnessAverage.push(average);
+	}
 	
 
 	return Ga;
