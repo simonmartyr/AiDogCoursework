@@ -1,7 +1,7 @@
 var Nueral = (function(){
 	var nuerons = []; //array of all nuerons 
 	var layers 	= [];
-	var outputs = [0, 0];
+	var outputs = [];
 	var inputs 	= [];
 	var bias 		= 0;
 	var hiddenLayers = 0; //number of hidden layers
@@ -134,7 +134,7 @@ var Nueral = (function(){
 	/********Running private functions************/
 	
 	function beginNetwork(inputs){ // expect array
-		for(var j = 0; j < inputs; j++){
+		for(var j = 0; j < inputs.length; j++){
 			setNextInputs(layers[0]["nuerons"], inputs[j]); //setup first time inputs	
 		}
 		
@@ -157,7 +157,7 @@ var Nueral = (function(){
 		var theNueron = findNueron(nueronName);
 		var output = 0;
 		if(!isNaN(theNueron)){ //check nueron 
-		  for(var i = 0; i < nuerons[theNueron]["inputs"].length; i++){
+		  for(var i = 0; i < nuerons[theNueron]["inputAr"].length; i++){
 				output += nuerons[theNueron]["inputAr"][i] * nuerons[theNueron]["weightValues"][i]; //process connections
 			}
 			output += bias * nuerons[theNueron]["bias"];  //process bias
@@ -192,8 +192,9 @@ var Nueral = (function(){
 		return false; //not found
 	};
 	
-	function sigmoid(t) { // reference http://www.zacwitte.com/javascript-sigmoid-function
-    return 1/(1+Math.pow(Math.E, -t));
+	function sigmoid(x) { // reference http://www.zacwitte.com/javascript-sigmoid-function
+		 e = Math.exp(2*x);
+		return (e - 1) / (e + 1) ;
 	};
 
 	

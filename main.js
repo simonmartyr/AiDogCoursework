@@ -7,6 +7,27 @@ $(window).load(function()
 		nueralNetwork = new Nueral();
 	});
 	
+	function setWeights()
+	{
+	/*** set weights ***/
+		//need GA to generate 
+		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 1);
+		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 2);
+		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 3);
+		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 4);
+		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 5);
+		nueralNetwork.setWeight([0.5, 0.1, 0.5, 0.4, 0.7] , 6);
+		nueralNetwork.setWeight([0.5, 0.1, 0.5, 0.4, 0.7] , 7);
+		
+		//bias 
+		nueralNetwork.setBiasWeight(1, 0.2);
+		nueralNetwork.setBiasWeight(2, 0.2);
+		nueralNetwork.setBiasWeight(3, 0.2);
+		nueralNetwork.setBiasWeight(4, 0.2);
+		nueralNetwork.setBiasWeight(5, 0.2);
+		nueralNetwork.setBiasWeight(6, 0.2);
+		nueralNetwork.setBiasWeight(7, 0.2);
+	}
 	
 	function setupNueralNetwork()
 	{
@@ -38,8 +59,8 @@ $(window).load(function()
 		nueralNetwork.addNueron(5 , 2); 
 		nueralNetwork.addNueron(5 , 2);
 		
-		nueralNetwork.addNueronToLayer(6 , 1);
-		nueralNetwork.addNueronToLayer(7 , 1);
+		nueralNetwork.addNueronToLayer(6 , 2);
+		nueralNetwork.addNueronToLayer(7 , 2);
 		
 		
 		/*** connections ***/ 
@@ -49,22 +70,5 @@ $(window).load(function()
 		nueralNetwork.connectTo(4 , [6 , 7]);
 		nueralNetwork.connectTo(5 , [6 , 7]);
 		
-		/*** set weights ***/
-		//need GA to generate 
-		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 1);
-		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 2);
-		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 3);
-		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 4);
-		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 5);
-		nueralNetwork.setWeight([0.5, 0.1] , 6);
-		nueralNetwork.setWeight([0.5, 0.1] , 7);
 		
-		//bias 
-		nueralNetwork.setBiasWeight(1, 0);
-		nueralNetwork.setBiasWeight(2, 0);
-		nueralNetwork.setBiasWeight(3, 0);
-		nueralNetwork.setBiasWeight(4, 0);
-		nueralNetwork.setBiasWeight(5, 0);
-		nueralNetwork.setBiasWeight(6, 0);
-		nueralNetwork.setBiasWeight(7, 0);
 	}
