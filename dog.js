@@ -78,7 +78,7 @@ var Dog = (function(){
 		$("."+endLocation).text(facing).addClass("dog");
 		
 		if($("."+endLocation).hasClass("trail")){ //we step on trail we remove it
-		  trailCount = trailCount++; //add to count of trail
+		  trailCount++; //add to count of trail
 			$("."+endLocation).removeClass("trail");
 		}
 	};
@@ -121,7 +121,7 @@ var Dog = (function(){
 		}
 	};
 	
-	Dog.prototype.trailCount = function(){
+	Dog.prototype.trail = function(){
 		return trailCount; //determin fitness
 	};
 	

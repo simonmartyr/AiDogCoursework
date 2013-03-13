@@ -1,9 +1,8 @@
 var Nueral = (function(){
 	var nuerons = []; //array of all nuerons 
-	var layers 	= [];
-	var outputs = [];
-	var inputs 	= [];
-	var bias 		= 0;
+	var layers 	= []; //array of all layers
+	var outputs = []; //final output
+	var bias 		= 0; //bias to all nuerons 
 	var hiddenLayers = 0; //number of hidden layers
 	
 	function Nueral(){
@@ -16,22 +15,22 @@ var Nueral = (function(){
 		layers = [];
 		outputs = [];
 		nuerons = [];
-		inputs = [];
+		bias = 0;
 		hiddenLayers = 0; 
-	}
+	};
 	
 	Nueral.prototype.getOutputs = function() { // return output 2 01, 00 etc
 		return outputs; 
 	};
 	
 	Nueral.prototype.run = function(inputs) { //expected 3 input array input
+		outputs = [];
 		beginNetwork(inputs);
 	};
 	
 	Nueral.prototype.setBias = function (value) {
 		bias = value; 
 	};
-	
 	
 	Nueral.prototype.getAll = function(){
 		console.log(nuerons);
@@ -44,7 +43,7 @@ var Nueral = (function(){
 	Nueral.prototype.addNueron = function(inputs, outputs){ //data to be processed. 
 		var nueronJSON = {"name"	 	: nuerons.length + 1,  //1 - *
 											"inputs" 	: inputs, //number of 
-											"inputAr"	: [],
+											"inputAr"	: [],	//values inputted to this nueron 
 											"weights" : inputs, //number of
 											"outputs" : outputs, //number of
 											"weightValues" : "",  //value of each connection
@@ -168,6 +167,7 @@ var Nueral = (function(){
 			else {
 				output = (output > 0) ? 1 : 0;
 				outputs.push(output); //else this is the result of our nueral network,
+				resetInputs(); // settup for next time round
 			}
 		}
 	};
@@ -176,6 +176,13 @@ var Nueral = (function(){
 		for(var i = 0; i < nueronList.length; i++){
 			var getN = findNueron(nueronList[i]);
 			nuerons[getN]["inputAr"].push(input); //update inputs from outputs. 
+		}
+	};
+	
+	function resetInputs(){
+		for(var i = 0; i < nuerons.length; i++)
+		{
+			nuerons[i]["inputAr"] = [];
 		}
 	};
 

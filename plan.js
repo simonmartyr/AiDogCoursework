@@ -16,9 +16,15 @@ var Plan = (function(){
 	};
 	
 	Plan.prototype.getRule = function(rule) {
-		return theRule[rule];
+		return theRules[rule];
 	};
 	
 
 	return Plan;
 }) ();
+
+
+//00 do nothing
+//01 turn right
+//10 turn left
+//11 move forward

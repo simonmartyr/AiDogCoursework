@@ -6,8 +6,8 @@ var Ga = (function(){
 	var fitnessAverage = new Array();
 	var muationFlip = 1.5; //between 1 - 100% 
 	var totalFitness = 0; //total sum of fitness
-	var maxGroupSize = 8; //max size of an person
-	var maxPopulation = 10; //max size of population
+	var maxGroupSize = 32; //max size of an person
+	var maxPopulation = 25; //max size of population
 	var tournment = true; //toggle tournmentSelection
 	var iteration = 50; //number of iterations
 	
@@ -23,14 +23,7 @@ var Ga = (function(){
 		return population;
 	};
 	
-	Ga.prototype.totalFitness = function () {
-		for(var i = 0; i < population.length; i++){
-			fitnesses.push(fitness(population[i])); //each fitness
-		}
-		$.each(fitnesses, function() {
-			totalFitness = totalFitness + this; //population fitness
-		});
-	};
+
 	
 	Ga.prototype.rouletteSelection = function(){ //mixup the population
 		var keep = (tournment) ? keepBest() : null;
@@ -57,17 +50,13 @@ var Ga = (function(){
 	};
 
 
-	Ga.prototype.fitness = function(fitness) { // amount of trail found due to thoes weights 
-	 var count = group.length;
-	 var groupFitness = 0;
-	 for(count; count > 0; count--) {
-		 if (group[count -1] == group[count -2])
-			groupFitness = groupFitness + 2;
-		count--;	
-		}
-	 return groupFitness
+	Ga.prototype.fitness = function(fitness) { //set population fitness
+		fitnesses = new array();
+		fitnesses = fitness.slice(0);
+		totalFitness();
 	};
 
+	/*** private functions ***/
 
 	function keepBest() {
 		var theBest = population[fitnesses.indexOf(fitnessMax[fitnessMax.length - 1])];
@@ -75,12 +64,18 @@ var Ga = (function(){
 		return theBest;
 	};
 	
+	function totalFitness() {
+		$.each(fitnesses, function() {
+			totalFitness = totalFitness + this; //population fitness
+		});
+	};
+	
 	function populate() { //populate the population!
 		var bitToPopulate;
-		var group = [];
+		var group = []; //set of weights 
 		while (population.length != maxPopulation){
 			while(group.length != maxGroupSize){
-				bitToPopulate = Math.floor(Math.random() * 2); // random 1 or 0
+				bitToPopulate = getRandomArbitary(-1, 1); // between -1 - 1 weight
 				group.push(bitToPopulate);
 			}
 			population.push(group); 
@@ -105,7 +100,8 @@ var Ga = (function(){
 			}
 		}  
 		crossover();
-	};
+	};// chill the fuck out
+	
 
 	function crossover () {
 		var loopCount = ofspring.length;
@@ -137,6 +133,10 @@ var Ga = (function(){
 			mutation = Math.floor((Math.random() * (100 + 1)+ 1)); //flip dat coin
 		}
 		return flippy;
+	};
+	
+	function getRandomArbitary (min, max) {
+    return Math.random() * (max - min) + min;
 	};
 	
 

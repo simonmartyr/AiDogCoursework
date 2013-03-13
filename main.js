@@ -1,32 +1,98 @@
+	var population; 
+	var flag = true;
+	var planLength = 8; //constant
+	var tests = [[-1, -1, -1],
+							 [-1, -1, 1],
+							 [-1, 1, -1],
+							 [1, -1, -1],
+							 [-1, 1, 1],
+							 [1, 1, -1],
+							 [1, -1, 1],
+							 [1, 1, 1]];
+	var fitness = [];
+							 
 $(window).load(function() 
 	{
-		doggy = new Dog();
-		plan = new Plan();
-		ga = new Ga();
-		enviroment = new Enviroment();
-		nueralNetwork = new Nueral();
+		doggy = new Dog(); //setup dog
+		plan = new Plan(); // setup plan
+		ga = new Ga(); // setup GA
+		enviroment = new Enviroment(); // settup enviroment
+		nueralNetwork = new Nueral(); // setup network
+		
+		ga.start(); //get a population
+		setupNueralNetwork(); // do once setup network 
+		population = ga.getPopulation(); //get the population
+		
+		
 	});
 	
-	function setWeights()
+	
+	function runIt(){
+		
+			for(var i = 0; i < population.length; i++)
+			{
+				setWeights(population[i]); //set weights
+				for(var j = 0; j < tests.length; j++){
+					nueralNetwork.run(tests[j]); 
+					var rule = tests[j].toString().replace(/,/g, '').replace(/-1/g, 0);
+					var value = nueralNetwork.getOutputs().toString().replace(/,/g, '');
+					plan.setRule(rule, value);
+				}
+				dogRun();
+			}
+			
+		
+		
+	}
+	
+	function dogRun() {
+		doggy.reset();
+		enviroment.reset();
+		while(enviroment.oneTick()){
+			var sensors = doggy.sensors().toString().replace(/,/g , "");
+			switch(plan.getRule(sensors))
+			{
+				case "00":
+				break;
+				case "01":
+					doggy.turn("right");
+				break;
+				case "10":
+					doggy.turn("left");
+				break;
+				case "11":
+					doggy.moveFoward();
+				break;
+				default:
+				break;
+			}
+		}
+		fitness.push(doggy.trail());
+	}
+	
+	
+	function setWeights(weights) //take in array of [32] and then populate
 	{
 	/*** set weights ***/
 		//need GA to generate 
-		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 1);
-		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 2);
-		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 3);
-		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 4);
-		nueralNetwork.setWeight([0.4, 0.3, 0.2] , 5);
-		nueralNetwork.setWeight([0.5, 0.1, 0.5, 0.4, 0.7] , 6);
-		nueralNetwork.setWeight([0.5, 0.1, 0.5, 0.4, 0.7] , 7);
+		nueralNetwork.setWeight([weights[0],weights[1], weights[2]] , 1);
+		nueralNetwork.setWeight([weights[3],weights[4], weights[5]] , 2);
+		nueralNetwork.setWeight([weights[6],weights[7], weights[8]] , 3);
+		nueralNetwork.setWeight([weights[9],weights[10], weights[11]] , 4);
+		nueralNetwork.setWeight([weights[12],weights[13], weights[14]] , 5); //3 * 5
+		nueralNetwork.setWeight([weights[15],weights[16], weights[17], weights[18], weights[19]] , 6);
+		nueralNetwork.setWeight([weights[20],weights[21], weights[22], weights[23], weights[24]] , 7); // 5 * 2
 		
 		//bias 
-		nueralNetwork.setBiasWeight(1, 0.2);
-		nueralNetwork.setBiasWeight(2, 0.2);
-		nueralNetwork.setBiasWeight(3, 0.2);
-		nueralNetwork.setBiasWeight(4, 0.2);
-		nueralNetwork.setBiasWeight(5, 0.2);
-		nueralNetwork.setBiasWeight(6, 0.2);
-		nueralNetwork.setBiasWeight(7, 0.2);
+		nueralNetwork.setBiasWeight(1, weights[25]);
+		nueralNetwork.setBiasWeight(2, weights[26]);
+		nueralNetwork.setBiasWeight(3, weights[27]);
+		nueralNetwork.setBiasWeight(4, weights[28]);
+		nueralNetwork.setBiasWeight(5, weights[29]);
+		nueralNetwork.setBiasWeight(6, weights[30]);
+		nueralNetwork.setBiasWeight(7, weights[31]); // + 7 
+		
+		//32 total weights 
 	}
 	
 	function setupNueralNetwork()
