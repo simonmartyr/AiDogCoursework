@@ -40,12 +40,21 @@ $(window).load(function()
 				}
 				dogRun();
 			}
+			console.log(fitness);
 			ga.fitness(fitness); // inform ga of fitnesses of soultions
 			fitness = [];
 			ga.rouletteSelection(); //roulette it new population
 			population = ga.getPopulation().slice(); //new population
 		}
-		
+		//finish on best
+		setWeights(ga.getBest()); //set weights
+				for(var j = 0; j < tests.length; j++){
+					nueralNetwork.run(tests[j]); 
+					var rule = tests[j].toString().replace(/,/g, '').replace(/-1/g, 0);
+					var value = nueralNetwork.getOutputs().toString().replace(/,/g, '');
+					plan.setRule(rule, value);
+		}
+		dogRun();
 	}
 	
 	function dogRun() {

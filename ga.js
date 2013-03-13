@@ -4,6 +4,7 @@ var Ga = (function(){
 	var ofspring = new Array(); 
 	var fitnessMax = new Array();
 	var fitnessAverage = new Array();
+	var keep = new Array();
 	var muationFlip = 1.5; //between 1 - 100% 
 	var totalFitness = 0; //total sum of fitness
 	var maxGroupSize = 32; //max size of an person
@@ -19,6 +20,10 @@ var Ga = (function(){
 		populate();	
 	};
 	
+	Ga.prototype.getBest = function() {
+		return keep;
+	};
+	
 	Ga.prototype.getPopulation = function() {
 		return population;
 	};
@@ -26,7 +31,8 @@ var Ga = (function(){
 
 	
 	Ga.prototype.rouletteSelection = function(){ //mixup the population
-		var keep = (tournment) ? keepBest() : null;
+		keep = new Array();
+		keep = (tournment) ? keepBest() : null;
 		roulette(); // the magic
 		population = ofspring; //new population
 		population[maxPopulation - 1] = (keep != null)  ? keep : population[maxPopulation - 1];
@@ -62,7 +68,6 @@ var Ga = (function(){
 
 	function keepBest() {
 		var theBest = population[fitnesses.indexOf(fitnessMax[fitnessMax.length - 1])];
-		console.log(theBest); // debug
 		return theBest;
 	};
 	
