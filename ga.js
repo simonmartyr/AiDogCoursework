@@ -8,7 +8,7 @@ var Ga = (function(){
 	var muationFlip = 1.5; //between 1 - 100% 
 	var totalFitness = 0; //total sum of fitness
 	var maxGroupSize = 32; //max size of an person
-	var maxPopulation = 26; //max size of population
+	var maxPopulation = 12; //max size of population
 	var tournment = true; //toggle tournmentSelection
 	var iteration = 50; //number of iterations
 	
@@ -143,18 +143,73 @@ var Ga = (function(){
 	};
 	
 	function getRandomArbitary (min, max) {
-    return Math.random() * (max - min) + min;
+		return Math.random() * (max - min) + min;
 	};
 	
 	function chartData(){ //take fitnesses makes averages max etc
 	 var max, average, store = [];
 		store = fitnesses.slice();
-		store.sort();
+		store.sort(function(a,b){return a-b});
 		max = store[store.length -1];
 		average = totalFitness / fitnesses.length;
 		fitnessMax.push(max);
 		fitnessAverage.push(average);
 	}
+	
+	/** Create chart **/
+	Ga.prototype.chart = function () {
+	var chart;
+	chart = new Highcharts.Chart({
+		chart: {
+				renderTo: 'chart',
+				type: 'line'
+		},
+		title: {
+				text: 'Fitness overtime',
+				x: -20 //center
+		},
+		subtitle: {
+				text: 'over 50 iterations',
+				x: -20
+		},
+		xAxis: {
+				title: {
+						text: 'Number of iterations'
+				},
+		},
+		yAxis: {
+				title: {
+						text: 'Fitness'
+				},
+				plotLines: [{
+						value: 0,
+						width: 1,
+						color: '#808080'
+				}]
+		},
+		tooltip: {
+				formatter: function() {
+								return '<b>'+ this.series.name +'</b><br/>'+
+								this.x +': '+ this.y;
+				}
+		},
+		legend: {
+				layout: 'vertical',
+				align: 'right',
+				verticalAlign: 'top',
+				x: -10,
+				y: 100,
+				borderWidth: 0
+		},
+		series: [{
+				name: 'Average Fitness',
+				data: fitnessAverage
+		},{
+				name: 'Max Fitness',
+				data: fitnessMax
+		}]
+	});
+	};
 	
 
 	return Ga;

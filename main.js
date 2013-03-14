@@ -19,15 +19,18 @@ $(window).load(function()
 		enviroment = new Enviroment(); // settup enviroment
 		nueralNetwork = new Nueral(); // setup network
 		
-		ga.start(); //get a population
 		setupNueralNetwork(); // do once setup network 
-		population = ga.getPopulation().slice(0); //get the population
+		
 		
 		
 	});
 	
 	
 	function runIt(){
+		ga.reset();
+		ga.start(); //get a population
+		population = [];
+		population = ga.getPopulation().slice(); //get the population
 		for(var x = 0; x < 50; x++){
 			for(var i = 0; i < population.length; i++)
 			{
@@ -44,6 +47,7 @@ $(window).load(function()
 			ga.fitness(fitness); // inform ga of fitnesses of soultions
 			fitness = [];
 			ga.rouletteSelection(); //roulette it new population
+			population = [];
 			population = ga.getPopulation().slice(); //new population
 		}
 		//finish on best
@@ -55,6 +59,8 @@ $(window).load(function()
 					plan.setRule(rule, value);
 		}
 		dogRun();
+		ga.chart();
+		fitness = [];
 	}
 	
 	function dogRun() {
@@ -110,7 +116,7 @@ $(window).load(function()
 	function setupNueralNetwork()
 	{
 		/** set bias **/
-		nueralNetwork.setBias(1);
+		nueralNetwork.setBias(0.1);
 		
 		/** Layers **/
 		nueralNetwork.addLayer(5); //1st layer
