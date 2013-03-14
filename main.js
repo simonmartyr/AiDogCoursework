@@ -66,6 +66,7 @@ $(window).load(function()
 	function dogRun() {
 		doggy.reset();
 		enviroment.reset();
+		var turnCount = 0;  //fix da gap
 		while(enviroment.oneTick()){
 			var sensors = doggy.sensors().toString().replace(/,/g , "");
 			switch(plan.getRule(sensors))
@@ -73,13 +74,28 @@ $(window).load(function()
 				case "00":
 				break;
 				case "01":
-					doggy.turn("right");
+					if(turnCount != 4){ 
+						doggy.turn("right");
+						turnCount++;
+					}
+					else{
+						doggy.moveFoward(); //we turned a circle go forward
+						turnCount = 0; 
+					}
 				break;
 				case "10":
+					if(turnCount !=4){ 
 					doggy.turn("left");
+					turnCount++;
+					}
+					else{
+						doggy.moveFoward(); //we turned a circle go forward
+						turnCount = 0; 
+					}
 				break;
 				case "11":
 					doggy.moveFoward();
+					turnCount = 0; 
 				break;
 				default:
 				break;

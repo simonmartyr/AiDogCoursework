@@ -5,6 +5,7 @@ var Ga = (function(){
 	var fitnessMax = new Array();
 	var fitnessAverage = new Array();
 	var keep = new Array();
+	var crossOverFlag = true;
 	var muationFlip = 1.5; //between 1 - 100% 
 	var totalFitness = 0; //total sum of fitness
 	var maxGroupSize = 32; //max size of an person
@@ -20,12 +21,20 @@ var Ga = (function(){
 		populate();	
 	};
 	
+	Ga.prototype.crossFlag = function () {
+		crossOverFlag = (crossOverFlag == true) ? false : true;
+	};
+	
 	Ga.prototype.getBest = function() {
 		return keep;
 	};
 	
 	Ga.prototype.getPopulation = function() {
 		return population;
+	};
+	
+	Ga.prototype.setMut = function (value) {
+		muationFlip = value; 
 	};
 	
 
@@ -41,7 +50,7 @@ var Ga = (function(){
 		totalFitness = 0; //reset total
 	};
 	
-	Ga.prototype.setTournment = function(set){
+	Ga.prototype.toggleKeep = function(set){
 		tournment = set;
 	};
 	
@@ -106,7 +115,12 @@ var Ga = (function(){
 					flag = 0; // we found our parents
 			}
 		}  
-		crossover();
+		if(crossOverFlag){
+			crossover();
+		}
+		else{
+			flipOnly();
+		}
 	};// chill the fuck out
 	
 
@@ -129,6 +143,20 @@ var Ga = (function(){
 		}
 		ofspring = children.slice(); // :') I shed a tear everytime
 	};
+	
+	function flipOnly () { //for the man with nothing to hide.. but still wants to.
+		var loopCount = ofspring.length;
+		var index = 0;
+		var children = [];
+		while (loopCount != index)
+		{
+			var child = []; 
+			child = ofspring[index].slice(); //take the kid
+			children.push(bitFlipping(child)); // make him a man
+			index++; //go get the rest
+		}
+		ofspring = children.slice(); //dem kids be crazy
+	}
 
 	function bitFlipping (flippy) { //so angry could flip tables 
 		var mutation = Math.floor((Math.random() * (100 + 1)+ 1)); // mutation chance

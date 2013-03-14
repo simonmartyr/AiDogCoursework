@@ -103,7 +103,15 @@
 			</br>
 			</br>
 			</div>
-			<button onclick="runIt()">Run this mother.</button>
+			<button onclick="runIt()">Go Dog Go</button>
+			</br>
+			<button onclick="ga.toggleKeep(); $(">Toggle keep</button><span id="keep">on</span>
+			</br>
+			<input id="mu"><button onclick="ga.setMut($('#mu').val())">Set Mutation</button>
+			</br>
+			<input id="bias"><button onclick="nueralNetwork.setBias($('#bias').val())">Set Bias</button>
+			</br>
+			<button onclick="ga.crossFlag()">Toggle crossover</button>
 			</br>
 			</br>
 			<div id="chart" style="text-align: center;border: 1px black dashed;">
