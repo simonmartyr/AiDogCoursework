@@ -25,8 +25,15 @@ $(window).load(function()
 		
 	});
 	
+	function keepToggle(){
+		ga.toggleKeep();
+		var on = ($("#keep").html() == "on") ? "off" : "on";
+		$("#keep").html(on);
+	}
+	
 	
 	function runIt(){
+		
 		ga.reset();
 		ga.start(); //get a population
 		population = [];
@@ -50,6 +57,7 @@ $(window).load(function()
 			population = [];
 			population = ga.getPopulation().slice(); //new population
 		}
+		
 		//finish on best
 		setWeights(ga.getBest()); //set weights
 				for(var j = 0; j < tests.length; j++){

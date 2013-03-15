@@ -5,7 +5,10 @@ var Ga = (function(){
 	var fitnessMax = new Array();
 	var fitnessAverage = new Array();
 	var keep = new Array();
+	var fitnessAverageOverall = new Array();
+	var fitnessMaxEnd = new Array();
 	var crossOverFlag = true;
+	var resetFlag = false;
 	var muationFlip = 1.5; //between 1 - 100% 
 	var totalFitness = 0; //total sum of fitness
 	var maxGroupSize = 32; //max size of an person
@@ -59,6 +62,16 @@ var Ga = (function(){
 	};
 	
 	Ga.prototype.reset = function(){
+		if(resetFlag){ //running totals. currently not used. 
+			var sum = fitnessAverage.reduce(function(a, b) { return a + b });
+			fitnessAverageOverall .push(sum / fitnessAverage.length);
+			var sum = fitnessMax.reduce(function(a, b) { return a + b });
+			fitnessMaxEnd.push(sum / fitnessMax.length ); //get last
+		}
+		else
+		{
+			resetFlag = true; 
+		}
 		population = [];
 		fitnessMax = [];
 		fitnessAverage = [];
@@ -193,11 +206,11 @@ var Ga = (function(){
 				type: 'line'
 		},
 		title: {
-				text: 'Fitness overtime',
+				text: 'Average and Best fitness',
 				x: -20 //center
 		},
 		subtitle: {
-				text: 'over 50 iterations',
+				text: 'population size ' + maxPopulation +' ,  50 generations, ' + muationFlip + '% chance of mutation' ,
 				x: -20
 		},
 		xAxis: {
