@@ -5,11 +5,12 @@ var Ga = (function(){
 	var fitnessMax = new Array();
 	var fitnessAverage = new Array();
 	var keep = new Array();
-	var fitnessAverageOverall = new Array();
+	var fitnessAverageEnd = new Array();
 	var fitnessMaxEnd = new Array();
 	var crossOverFlag = true;
 	var resetFlag = false;
 	var muationFlip = 1.5; //between 1 - 100% 
+	var invert = false;
 	var totalFitness = 0; //total sum of fitness
 	var maxGroupSize = 32; //max size of an person
 	var maxPopulation = 12; //max size of population
@@ -22,6 +23,10 @@ var Ga = (function(){
 	
 	Ga.prototype.start = function() {
 		populate();	
+	};
+	
+	Ga.prototype.invert = function() {
+		invert  = (invert  == true) ? false : true;
 	};
 	
 	Ga.prototype.crossFlag = function () {
@@ -61,17 +66,19 @@ var Ga = (function(){
 		iteration = iterations; 
 	};
 	
+	Ga.prototype.hardReset = function(){
+	// back to square one
+		fitnessAverageEnd = [];
+		fitnessMaxEnd = [];
+		population = [];
+		fitnessMax = [];
+		fitnessAverage = [];
+	};
+	
 	Ga.prototype.reset = function(){
-		if(resetFlag){ //running totals. currently not used. 
-			var sum = fitnessAverage.reduce(function(a, b) { return a + b });
-			fitnessAverageOverall .push(sum / fitnessAverage.length);
-			var sum = fitnessMax.reduce(function(a, b) { return a + b });
-			fitnessMaxEnd.push(sum / fitnessMax.length ); //get last
-		}
-		else
-		{
-			resetFlag = true; 
-		}
+	    fitnessAverageEnd .push(fitnessAverage);
+	    fitnessMaxEnd.push(fitnessMax );  //running collection of results
+		//iteration resets 
 		population = [];
 		fitnessMax = [];
 		fitnessAverage = [];
@@ -176,6 +183,11 @@ var Ga = (function(){
 		var count = flippy.length; //length of indivual
 		for(count; count > 0; count--) {
 		 if (mutation <= muationFlip){
+			if(invert){
+				 flippy[count] = ( flippy[count] >  0) ?  0 -  flippy[count] :  flippy[count] + 1;  // should flip a value for example 0.5 to -0.5
+			}
+			else{
+			}
 			 flippy[count] = getRandomArbitary (-1, 1);
 		 }
 			mutation = Math.floor((Math.random() * (100 + 1)+ 1)); //flip dat coin
@@ -195,7 +207,24 @@ var Ga = (function(){
 		average = totalFitness / fitnesses.length;
 		fitnessMax.push(max);
 		fitnessAverage.push(average);
-	}
+		
+	};
+	
+	function generateAverages(Toaverage){
+		//basically, given 50 or so arrays we find the average of each index make a new array
+		var average =  [];
+		var max =  Toaverage[0].length; 
+		var counter = 0;
+		while (counter != max){
+			var total = 0;
+			for(var i = 0; i < Toaverage.length; i++){
+				total += Toaverage[i][counter];  //total 
+			}
+			average.push(total/Toaverage.length);
+			counter++;
+		}
+		return average; 
+	};
 	
 	/** Create chart **/
 	Ga.prototype.chart = function () {
@@ -206,7 +235,7 @@ var Ga = (function(){
 				type: 'line'
 		},
 		title: {
-				text: 'Average and Best fitness',
+				text: 'Average and Best fitness averaged over 50 runs',
 				x: -20 //center
 		},
 		subtitle: {
@@ -244,10 +273,10 @@ var Ga = (function(){
 		},
 		series: [{
 				name: 'Average Fitness',
-				data: fitnessAverage
+				data: generateAverages(fitnessAverageEnd)
 		},{
 				name: 'Max Fitness',
-				data: fitnessMax
+				data: generateAverages(fitnessMaxEnd)
 		}]
 	});
 	};

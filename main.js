@@ -34,28 +34,32 @@ $(window).load(function()
 	
 	function runIt(){
 		
-		ga.reset();
-		ga.start(); //get a population
-		population = [];
-		population = ga.getPopulation().slice(); //get the population
-		for(var x = 0; x < 50; x++){
-			for(var i = 0; i < population.length; i++)
-			{
-				setWeights(population[i]); //set weights
-				for(var j = 0; j < tests.length; j++){
-					nueralNetwork.run(tests[j]); 
-					var rule = tests[j].toString().replace(/,/g, '').replace(/-1/g, 0);
-					var value = nueralNetwork.getOutputs().toString().replace(/,/g, '');
-					plan.setRule(rule, value);
-				}
-				dogRun();
-			}
-			console.log(fitness);
-			ga.fitness(fitness); // inform ga of fitnesses of soultions
-			fitness = [];
-			ga.rouletteSelection(); //roulette it new population
+		ga.hardReset();
+		
+		for(var runs = 0; runs < 50; runs++){
+			ga.start(); //get a population
 			population = [];
-			population = ga.getPopulation().slice(); //new population
+			population = ga.getPopulation().slice(); //get the population
+			for(var x = 0; x < 50; x++){
+				for(var i = 0; i < population.length; i++)
+				{
+					setWeights(population[i]); //set weights
+					for(var j = 0; j < tests.length; j++){
+						nueralNetwork.run(tests[j]); 
+						var rule = tests[j].toString().replace(/,/g, '').replace(/-1/g, 0);
+						var value = nueralNetwork.getOutputs().toString().replace(/,/g, '');
+						plan.setRule(rule, value);
+					}
+					dogRun();
+				}
+				console.log(fitness);
+				ga.fitness(fitness); // inform ga of fitnesses of soultions
+				fitness = [];
+				ga.rouletteSelection(); //roulette it new population
+				population = [];
+				population = ga.getPopulation().slice(); //new population
+			}
+			ga.reset();
 		}
 		
 		//finish on best
